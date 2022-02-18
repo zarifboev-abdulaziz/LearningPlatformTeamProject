@@ -1,30 +1,37 @@
 package uz.pdp.dao;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import uz.pdp.helper.Helper;
 import uz.pdp.model.Course;
+import uz.pdp.model.User;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
 import java.util.List;
 
 @Component
 public class CourseDao {
     @Autowired
-    JdbcTemplate template;
+    public SessionFactory sessionFactory;
 
 
     public List<Course> getAllCoursesFromDb() {
-        Session session = Helper.getSession();
-        Transaction transaction = session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery< Course > criteriaQuery = criteriaBuilder.createQuery(Course.class);
+        Root< Course > root = criteriaQuery.from(Course.class);
+        criteriaQuery.select(root);
+        javax.persistence.Query query = session.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
 
-        Query from_courses = session.createQuery("from courses");
-        List<Course> list = (List<Course>) from_courses.list();
+    public void saveCourseToDb(Course course) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(course);
 
-        transaction.commit();
-        return list;
     }
 }

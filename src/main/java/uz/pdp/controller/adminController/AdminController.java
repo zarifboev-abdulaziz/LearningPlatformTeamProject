@@ -4,9 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import uz.pdp.model.Course;
+import uz.pdp.model.User;
 import uz.pdp.service.CourseService;
+import uz.pdp.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -14,6 +19,8 @@ import java.util.List;
 public class AdminController {
     @Autowired
     CourseService courseService;
+    @Autowired
+    UserService userService;
 
     @GetMapping(path = "/home")
     public String studentHome() {
@@ -28,42 +35,51 @@ public class AdminController {
         return "/admin/view-courses";
     }
 
-    //   /admin/courses/editForm/
     @GetMapping(path = "/courses/addCourseForm")
-    public String addCourseForm() {
-        // TODO: 2/18/2022 kurs qoshish formasiga yuborish kerak
-        return "/admin/....";
+    public String addCourseForm(Model model) {
+        List<User> mentorList = userService.getMentors();
+
+        model.addAttribute("mentorList", mentorList);
+        return "/admin/addCourseForm";
     }
 
-    //   /admin/courses/editForm/
     @PostMapping(path = "/courses/addCourse")
-    public String addCourse() {
-        // TODO: 2/18/2022 formadan kelgan malumotlarni post qilib ushlab olinadi va databasega
-        // save qilinadi
+    public String addCourse(HttpServletRequest request, @RequestParam(name = "file") CommonsMultipartFile file) throws IOException {
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        String price = request.getParameter("price");
+        String[] mentors = request.getParameterValues("mentors");
+        String active = request.getParameter("active");
 
-        return "/admin/....";
+        boolean isActive = true;
+        if (active == null){
+            isActive = false;
+        }
+
+        Course course = new Course();
+        course.setName(name);
+        course.setDescription(description);
+        course.setPrice(Double.valueOf(price));
+        course.setActive(isActive);
+        courseService.saveCourse(course, file, mentors);
+
+        return "redirect:/admin/courses";
     }
 
     @GetMapping(path = "/courses/editForm/{courseId}")
     public String editCourseForm(@PathVariable Integer courseId, Model model) {
-        // TODO: 2/18/2022 getCourseById() metodi orqali edit qilinayotgan courseni olib kelish
-        // kerak va buni addAtribut qilib formga uzatish kerak;
-
-        return "/admin/....";
+        return "";
     }
 
     @PostMapping(path = "/courses/editForm")
     public String editCourse(Model model) {
-        // TODO: 2/18/2022 edit course formni toldirgandan keyin shu yerga keladi va buni databasega save qilish kerak.
 
-        return "/admin/view-courses";
+        return "";
     }
 
     @GetMapping(path = "/courses/delete/{courseId}")
     public String deleteCourse(@PathVariable Integer courseId, Model model) {
-        // TODO: 2/18/2022 course id orqali courseni delete qilish kerak
-
-        return "/admin/....";
+        return "";
     }
 
 

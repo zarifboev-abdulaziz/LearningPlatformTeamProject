@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +32,7 @@ public class Module {
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @OneToMany(mappedBy = "module")
-    private List<Lesson> lessons;
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    private List<Lesson> lessons = new ArrayList<>();
 
 }

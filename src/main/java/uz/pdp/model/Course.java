@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,11 +32,11 @@ public class Course {
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @OneToMany(mappedBy = "course")
-    private List<Module> modules;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Module> modules = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
-    private List<User> users;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<>();
 
 
 }

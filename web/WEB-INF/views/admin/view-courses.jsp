@@ -15,7 +15,7 @@
     <title>Courses</title>
 </head>
 <body>
-<a class="m-4 btn btn-success" href="/admin/courses/addForm">+ Add new course</a>
+<a class="m-4 btn btn-success" href="/admin/courses/addCourseForm">+ Add new course</a>
 <a class="m-4 btn btn-success" href="/admin/authors">Authors</a>
 <div style="padding: 20px">
     <form action="/admin/courses/search" method="post">
@@ -40,7 +40,7 @@
                 <a class="btn btn-danger" href="/admin/courses/delete/${course.id}">Delete</a>
             </td>
             <td>
-                <a class="btn btn-info" href="/courses/info/${course.id}">More...</a>
+                <a class="btn btn-info" href="/admin/courses/info/${course.id}">More...</a>
             </td>
         </tr>
     </c:forEach>

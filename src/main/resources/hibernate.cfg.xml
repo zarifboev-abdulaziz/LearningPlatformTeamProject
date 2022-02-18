@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 5.3//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-5.3.dtd">
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="hbm2ddl.auto">update</property>
+        <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/learning_platform_team_db</property>
+        <property name="connection.username">postgres</property>
+        <property name="connection.password">root123</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="show_sql">true</property>
+
+        <mapping class="uz.pdp.model.Course"/>
+        <mapping class="uz.pdp.model.Lesson"/>
+        <mapping class="uz.pdp.model.Module"/>
+        <mapping class="uz.pdp.model.User"/>
+        <mapping class="uz.pdp.model.Role"/>
+    </session-factory>
+</hibernate-configuration>

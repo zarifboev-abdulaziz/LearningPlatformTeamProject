@@ -72,4 +72,23 @@ public class UserDao {
         User user = currentSession.get(User.class, Integer.parseInt(userId));
         return user;
     }
+
+    public List<User> getAllUser(){
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root< User > root = criteriaQuery.from(User.class);
+        criteriaQuery.select(root);
+        javax.persistence.Query query = session.createQuery(criteriaQuery);
+
+        List<User> userList = (List<User>) query.getResultList();
+        return userList;
+    }
+
+    public User editUser(User user){
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.update(user);
+        User userById = getUserById(String.valueOf(user.getId()));
+        return userById;
+    }
 }

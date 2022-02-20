@@ -13,20 +13,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <title>Add Course</title>
+    <title>Edit Course</title>
 </head>
 <body>
 <div style="padding: 20px">
-    <h5>Add Course Form</h5><hr>
+    <h5>Edit Course Form</h5><hr>
 
-    <form action="/admin/courses/addCourse" method="post" enctype="multipart/form-data">
+    <form action="/courses/addCourse" method="post" enctype="multipart/form-data">
 
-        <input type="text" class="form-control" placeholder="Enter course name" name="name"><br>
+        <input name="id" type="hidden" value="${course.id}"><br>
 
-        <textarea class="form-control" placeholder="Enter course description" rows="3"
-                  name="description"></textarea> <br>
+        <input type="text" class="form-control" value="${course.name}" name="name"><br>
 
-        <input type="text" class="form-control" placeholder="Enter course price" name="price"><br><br>
+        <textarea class="form-control" rows="3"
+                  name="description" >${course.description}</textarea> <br>
+
+        <input type="text" class="form-control" value="${course.price}" name="price"><br><br>
 
         <select class="select" name="mentors" multiple>
 
@@ -42,8 +44,8 @@
         </div><br>
 
         <div>
-            <label class="form-label" for="customFile">Default file input example</label>
-            <input type="file" class="form-control" id="customFile" name="file"/>
+            <label class="form-label" for="customFile">${course.imageName}</label>
+            <input type="file" class="form-control" id="customFile" value="${course.imageName}" name="file"/>
         </div><br>
 
         <button type="submit" class="btn btn-primary">Save</button>

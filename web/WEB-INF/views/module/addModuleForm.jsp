@@ -1,14 +1,14 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 2/17/2022
-  Time: 11:36 PM
+  Date: 2/19/2022
+  Time: 6:05 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Home Page</title>
+    <title>Add module</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
@@ -16,14 +16,17 @@
 <body>
 
 <div style="padding: 20px">
-    <h1>Welcome To Home Page</h1><br>
+    <h5>Add Module Form</h5><hr>
 
-    <a class="m-4 btn btn-success" href="/courses/1">Show Courses</a>
-    <a class="m-4 btn btn-success" href="/mentors">Show Mentors</a>
-    <a class="m-4 btn btn-success" href="/user/settings">Profile Settings</a>
-    <a class="m-4 btn btn-success" href="/user/logout">Log out</a>
+    <form action="/modules/addModule" method="post">
 
+        <input type="text" class="form-control" placeholder="Enter module title" name="title"><br>
+        <input type="text" class="form-control" placeholder="Enter order of module" name="orderNumber"><br>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 </div>
+
 
 </body>
 </html>

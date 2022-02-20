@@ -1,6 +1,8 @@
 package uz.pdp.model;
 
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -25,17 +27,20 @@ public class Course {
     private boolean isActive;
     @Column(name = "price", columnDefinition = " double precision default 1000")
     private double price;
-    @Column(name = "image_path")
+    @Column(name = "image_path", columnDefinition = " text")
     private String imagePath;
+    @Column(name = "image_name")
+    private String imageName;
     @Column(name = "created_at", columnDefinition = " timestamp default now()")
     private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Module> modules = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
 
 

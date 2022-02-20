@@ -24,8 +24,25 @@ public class CourseService {
     UserDao userDao;
 
     @Transactional
-    public List<Course> getAllCourses() {
-        return courseDao.getAllCoursesFromDb();
+    public List<Course> getAllCourses(Integer page) throws IOException {
+        List<Course> allCoursesFromDb = courseDao.getAllCoursesFromDb(page);
+
+        for (Course course : allCoursesFromDb) {
+
+            BufferedImage image =  ImageIO.read(new File(resourcePath + "/" + course.getImageName()));
+
+            ByteArrayOutputStream base = new ByteArrayOutputStream();
+            ImageIO.write(image,"png",base);
+            base.flush();
+            byte[] imageInByteArray = base.toByteArray();
+            base.close();
+
+            String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+
+            course.setImagePath(b64);
+        }
+
+        return allCoursesFromDb;
     }
 
     @Transactional
@@ -49,9 +66,29 @@ public class CourseService {
 
         } catch (Exception e){}
 
-        course.setImagePath(filename);
+        course.setImageName(filename);
 
         courseDao.saveCourseToDb(course);
 
+    }
+
+    @Transactional
+    public Integer getTotalPages() {
+        return courseDao.getTotalPages();
+    }
+
+    @Transactional
+    public Course getCourseById(Integer courseId) {
+        return courseDao.getCourseById(courseId);
+    }
+
+    @Transactional
+    public void deleteCourseById(Integer courseId) {
+        courseDao.deleteCourseById(courseId);
+    }
+
+    @Transactional
+    public List<Course> getAllCourses() {
+       return courseDao.getAllCoursesFromDb();
     }
 }

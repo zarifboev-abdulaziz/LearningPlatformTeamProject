@@ -6,13 +6,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.dao.ModuleDao;
 import uz.pdp.model.Course;
+import uz.pdp.model.Lesson;
 import uz.pdp.model.Module;
+import uz.pdp.model.User;
 import uz.pdp.service.CourseService;
 import uz.pdp.service.ModuleService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -55,6 +58,18 @@ public class ModuleController {
         moduleService.deleteModule(moduleId);
 
         return "redirect:/courses/info/" + lastCourseId;
+    }
+
+    @GetMapping(path = "/info/{moduleId}")
+    public String getCourseInfo(@PathVariable Integer moduleId, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("lastModuleId", moduleId);
+        Module moduleById = moduleService.getModuleById(moduleId);
+        List<Lesson> lessons = moduleById.getLessons();
+
+        model.addAttribute("lessons", lessons);
+        model.addAttribute("module", moduleById);
+        return "/module/moduleInfoAndLessons";
     }
 
 }

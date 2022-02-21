@@ -35,9 +35,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public JdbcTemplate jdbcTemplate(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/learning_platform_team_db");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/learning_platform");
         dataSource.setUsername("postgres");
-        dataSource.setPassword("root123");
+        dataSource.setPassword("A20031212A");
         return new JdbcTemplate(dataSource);
     }
 

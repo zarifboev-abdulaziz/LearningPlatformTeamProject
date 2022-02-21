@@ -58,5 +58,13 @@ public class UserController {
         return "redirect:/user/home";
     }
 
+    @GetMapping(path = "/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("userId", null);
+        session.invalidate();
+        return "redirect:/user/home";
+    }
+
 
 }

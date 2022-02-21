@@ -55,6 +55,15 @@ public class UserController {
             }
         }
 
+        HttpSession session = request.getSession();
+        int roleId = (int)session.getAttribute("roleId");
+
+        switch (roleId){
+            case 1: return "redirect:/student/home";
+            case 2: return "redirect:/mentor/home";
+            case 3: return "redirect:/admin/home";
+            case 4: return "redirect:/superAdmin/home";
+        }
         return "redirect:/user/home";
     }
 

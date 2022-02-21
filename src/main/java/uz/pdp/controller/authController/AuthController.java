@@ -62,6 +62,7 @@ public class AuthController {
 
         HttpSession session = request.getSession();
         session.setAttribute("userId", loginedUser.getId());
+        session.setAttribute("roleId", loginedUser.getRoleId());
         model.addAttribute("message", "Welcome To Home Page");
 
         switch (loginedUser.getRoleId()){

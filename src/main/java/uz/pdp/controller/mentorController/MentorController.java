@@ -12,6 +12,7 @@ import uz.pdp.service.CourseService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MentorController {
     }
     
     @GetMapping("/courses")
-    public String getMentorCourses(HttpServletRequest request, Model model){
+    public String getMentorCourses(HttpServletRequest request, Model model) throws IOException {
         List<Course> mentorCourses = new ArrayList<>();
         List<Course> allCourses = courseService.getAllCourses();
         HttpSession session = request.getSession();

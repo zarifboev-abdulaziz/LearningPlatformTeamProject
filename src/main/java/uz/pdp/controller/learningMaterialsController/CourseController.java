@@ -27,9 +27,11 @@ public class CourseController {
 
 
     @GetMapping(path = "/{page}")
-    public String getCoursesForAdmin(@PathVariable Integer page, Model model) throws IOException {
-        List<Course> allCourses = courseService.getAllCourses(page);
-        Integer pages = courseService.getTotalPages();
+    public String getCoursesForAdmin(@PathVariable Integer page, Model model, HttpServletRequest request) throws IOException {
+        HttpSession session = request.getSession();
+        int roleId = (int)session.getAttribute("roleId");
+        List<Course> allCourses = courseService.getAllCourses(page, roleId);
+        Integer pages = courseService.getTotalPages(roleId);
 
 
         model.addAttribute("courseList", allCourses);
@@ -100,7 +102,6 @@ public class CourseController {
         HttpSession session = request.getSession();
         session.setAttribute("lastCourseId", courseId);
         Course courseById = courseService.getCourseById(courseId);
-        List<Module> modules = courseById.getModules();
         List<User> users = courseById.getUsers();
         List<User> mentors = new ArrayList<>();
         for (User user : users) {

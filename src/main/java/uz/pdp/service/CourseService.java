@@ -24,8 +24,8 @@ public class CourseService {
     UserDao userDao;
 
     @Transactional
-    public List<Course> getAllCourses(Integer page) throws IOException {
-        List<Course> allCoursesFromDb = courseDao.getAllCoursesFromDb(page);
+    public List<Course> getAllCourses(Integer page, int roleId) throws IOException {
+        List<Course> allCoursesFromDb = courseDao.getAllCoursesFromDb(page, roleId);
 
         for (Course course : allCoursesFromDb) {
 
@@ -73,8 +73,8 @@ public class CourseService {
     }
 
     @Transactional
-    public Integer getTotalPages() {
-        return courseDao.getTotalPages();
+    public Integer getTotalPages(int roleId) {
+        return courseDao.getTotalPages(roleId);
     }
 
     @Transactional
@@ -88,7 +88,28 @@ public class CourseService {
     }
 
     @Transactional
-    public List<Course> getAllCourses() {
-       return courseDao.getAllCoursesFromDb();
+    public List<Course> getAllCourses() throws IOException {
+        List<Course> allCoursesFromDb = courseDao.getAllCoursesFromDb();
+
+        for (Course course : allCoursesFromDb) {
+
+            BufferedImage image =  ImageIO.read(new File(resourcePath + "/" + course.getImageName()));
+
+            ByteArrayOutputStream base = new ByteArrayOutputStream();
+            ImageIO.write(image,"png",base);
+            base.flush();
+            byte[] imageInByteArray = base.toByteArray();
+            base.close();
+
+            String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+
+            course.setImagePath(b64);
+        }
+
+        return allCoursesFromDb;
+    }
+
+    public void purchaseCourse(int userId, Integer courseId) {
+        courseDao.purchaseCourse(userId, courseId);
     }
 }

@@ -19,8 +19,7 @@
 <body>
 <div style="padding: 20px">
 
-    <a class="btn btn-info" href='/courses/1'>Back to Courses</a>
-    <a class="btn btn-success" href='/modules/addModule'>+ Add new Module</a>
+    <a class="btn btn-info" href='/student/myCourses'>Back to Courses</a>
     <hr>
     <h4>${course.name}</h4>
     <p>${course.description}</p>
@@ -42,10 +41,13 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">${module.title}</h5>
-                            <a class="btn btn-warning" href='/modules/editModule/${module.id}'>Edit</a>
-                            <a class="btn btn-danger" href="/modules/delete/${module.id}">Delete</a>
-                            <a class="btn btn-info" href="/modules/info/${module.id}">More...</a>
+                            <h5 class="card-title">Module - ${module.orderNumber}</h5>
+                            <p class="card-text">${module.title}</p>
+                            <div class="card-footer">
+                                <small class="text-muted"><a class="btn btn-success"
+                                                             href="/student/lessons/${module.id}">Go</a></small>
+                            </div>
+
                         </div>
                     </div>
                 </div>

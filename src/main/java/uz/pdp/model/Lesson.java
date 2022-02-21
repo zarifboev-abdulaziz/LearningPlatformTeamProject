@@ -28,7 +28,7 @@ public class Lesson {
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Module module;
 
 }

@@ -14,26 +14,26 @@
           rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous">
-    <title>Modules</title>
+    <title>Courses</title>
 </head>
 <body>
 <div style="padding: 20px">
 
-    <a class="btn btn-info" href='/courses/1'>Back to Courses</a>
-    <a class="btn btn-success" href='/modules/addModule'>+ Add new Module</a>
-    <hr>
+    <a class="m-4 btn btn-success" href="/student/activeCourses/1">Back To Courses</a><br>
+
+
     <h4>${course.name}</h4>
     <p>${course.description}</p>
-
     <p>
+        Number of modules: ${course.modules.size()} <br>
+        Number of lessons: ${lessonCount} <br>
         Mentors:
         <c:forEach var="mentor" items="${mentors}">
             <a class="btn btn-success"
-               href='/mentors/info/${mentor.id}'>${mentor.fullName}</a>
+               href='/mentor/mentorInfo/${mentor.id}'> ${mentor.fullName} </a>
         </c:forEach>
     </p>
-
-    <h4>Module List</h4>
+    <h4>Modules</h4>
 
     <div class="container">
         <div class="row">
@@ -42,16 +42,33 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">${module.title}</h5>
-                            <a class="btn btn-warning" href='/modules/editModule/${module.id}'>Edit</a>
-                            <a class="btn btn-danger" href="/modules/delete/${module.id}">Delete</a>
-                            <a class="btn btn-info" href="/modules/info/${module.id}">More...</a>
+                            <h5 class="card-title">Module - ${module.orderNumber}</h5>
+                            <p class="card-text">${module.title}</p>
+                            <p class="card-text">Lessons: </p>
+                            <c:forEach var="lesson" items="${module.lessons}">
+                                <p>${lesson.orderNumber} - ${lesson.title}</p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
             </c:forEach>
         </div>
     </div>
+
+
+
+    <h4 style="color: green">Price: ${course.price}</h4>
+
+    <c:choose>
+        <c:when test="${isCoursePurchased == true}">
+            <button type="button" class="btn btn-secondary" disabled>Purchased</button>
+        </c:when>
+        <c:when test="${isCoursePurchased == false}">
+            <a class="btn btn-success" href='/student/purchaseCourse/${course.id}'>Purchase
+                Course</a>
+        </c:when>
+    </c:choose>
+
 
 </div>
 </body>

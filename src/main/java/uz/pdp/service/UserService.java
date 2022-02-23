@@ -52,4 +52,14 @@ public class UserService {
     public User editUser(User user){
         return userDao.editUser(user);
     }
+
+    @Transactional
+    public void saveUser(User user) {
+        userDao.saveUser(user);
+    }
+
+    @Transactional
+    public void deleteUserById(Integer mentorId) {
+        userDao.deleteUserById(mentorId);
+    }
 }

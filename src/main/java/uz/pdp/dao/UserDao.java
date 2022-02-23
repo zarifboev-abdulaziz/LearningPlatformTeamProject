@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import uz.pdp.model.Course;
 import uz.pdp.model.User;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -90,5 +91,21 @@ public class UserDao {
         currentSession.update(user);
         User userById = getUserById(String.valueOf(user.getId()));
         return userById;
+    }
+
+    public void saveUser(User user) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        if (user.getId()==null){
+            currentSession.save(user);
+        }else {
+         currentSession.update(user);
+        }
+    }
+
+    public void deleteUserById(Integer mentorId) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("delete from users where id=" + mentorId);
+        query.executeUpdate();
     }
 }

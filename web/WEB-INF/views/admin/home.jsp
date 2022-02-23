@@ -19,10 +19,9 @@
     <h1>Welcome To Home Page</h1><br>
 
     <a class="m-4 btn btn-success" href="/courses/1">Show Courses</a>
-    <a class="m-4 btn btn-success" href="/mentors">Show Mentors</a>
+    <a class="m-4 btn btn-success" href="/mentor/show">Show Mentors</a>
     <a class="m-4 btn btn-success" href="/user/settings">Profile Settings</a>
     <a class="m-4 btn btn-success" href="/user/logout">Log out</a>
-
 </div>
 
 </body>

@@ -27,7 +27,6 @@ public class CourseDao {
     @Autowired
     JdbcTemplate template;
 
-
     public List<Course> getAllCoursesFromDb(Integer page, int roleId) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();

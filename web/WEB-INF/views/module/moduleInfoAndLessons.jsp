@@ -25,19 +25,20 @@
     <h4>${module.title}</h4>
     <p>${module.orderNumber} - Module</p>
 
-    <h4>Lesson List</h4>
+    <center>
+        <h4>Lesson List</h4>
+    </center>
 
     <div class="container">
         <div class="row">
             <c:forEach var="lesson" items="${module.lessons}">
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">${lesson.orderNumber} - ${lesson.title}</h5>
+                            <h5 class="card-title"><a class="btn btn-secondary" href="/lessons/info/${lesson.id}">${lesson.orderNumber} - ${lesson.title}</a></h5>
                             <a class="btn btn-warning" href='/lessons/editLesson/${lesson.id}'>Edit</a>
                             <a class="btn btn-danger" href="/lessons/delete/${lesson.id}">Delete</a>
-                            <a class="btn btn-info" href="/lessons/info/${lesson.id}">More...</a>
                         </div>
                     </div>
                 </div>

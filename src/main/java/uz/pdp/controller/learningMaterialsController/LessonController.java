@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.model.Course;
 import uz.pdp.model.Lesson;
 import uz.pdp.model.Module;
+import uz.pdp.model.Task;
 import uz.pdp.service.LessonService;
 import uz.pdp.service.ModuleService;
 
@@ -61,9 +61,11 @@ public class LessonController {
         HttpSession session = request.getSession();
         session.setAttribute("lastLessonId", lessonId);
         Lesson lessonById = lessonService.getLessonById(lessonId);
+        List<Task> tasks = lessonById.getTasks();
 
         model.addAttribute("lesson", lessonById);
-        return "/lesson/lessonInfo";
+        model.addAttribute("tasks", tasks);
+        return "/lesson/lessonInfoAndTasks";
     }
 
 

@@ -6,13 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import uz.pdp.model.Course;
-import uz.pdp.model.Lesson;
-import uz.pdp.model.Module;
-import uz.pdp.model.User;
-import uz.pdp.service.CourseService;
-import uz.pdp.service.LessonService;
-import uz.pdp.service.ModuleService;
+import uz.pdp.model.*;
+import uz.pdp.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,14 +24,17 @@ public class StudentController {
     ModuleService moduleService;
     @Autowired
     LessonService lessonService;
+    @Autowired
+    TaskService taskService;
+    @Autowired
+    OptionService optionService;
+
+
 
     @GetMapping(path = "/home")
     public String studentHome() {
         return "/student/home";
     }
-
-//    activeCourses/1
-
 
     @GetMapping(path = "/activeCourses/{page}")
     public String showActiveCourses(@PathVariable Integer page, HttpServletRequest request, Model model) throws IOException {
@@ -152,6 +150,33 @@ public class StudentController {
 
         model.addAttribute("lesson", lessonById);
         return "/student/lessonInfo";
+    }
+
+    @GetMapping(path = "/tasks/{lessonId}/{taskId}")
+    public String showLessonTasks(@PathVariable Integer lessonId, @PathVariable Integer taskId, Model model, HttpServletRequest request){
+        Lesson lessonById = lessonService.getLessonById(lessonId);
+        Task taskById = taskService.getTaskById(taskId);
+
+        model.addAttribute("lesson", lessonById);
+        model.addAttribute("task", taskById);
+        return "/student/tasks";
+    }
+
+    @GetMapping(path = "/checkOption/{lessonId}/{taskId}/{optionId}")
+    public String showLessonTasks(@PathVariable Integer lessonId, @PathVariable Integer taskId, @PathVariable Integer optionId, Model model, HttpServletRequest request){
+        Lesson lessonById = lessonService.getLessonById(lessonId);
+        Task taskById = taskService.getTaskById(taskId);
+        Option optionById = optionService.getOptionById(optionId);
+
+        boolean isRight = false;
+        if (optionById.isRightAnswer()){
+            isRight = true;
+        }
+
+        model.addAttribute("lesson", lessonById);
+        model.addAttribute("task", taskById);
+        model.addAttribute("isRight", isRight);
+        return "/student/tasks";
     }
 
 

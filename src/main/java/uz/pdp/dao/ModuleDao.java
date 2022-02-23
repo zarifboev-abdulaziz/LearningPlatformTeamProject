@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import uz.pdp.model.Course;
+import uz.pdp.model.Lesson;
 import uz.pdp.model.Module;
 
 import javax.persistence.Query;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class ModuleDao {
@@ -27,6 +30,15 @@ public class ModuleDao {
     public Module getModuleById(Integer moduleId) {
         Session currentSession = sessionFactory.getCurrentSession();
         Module module = currentSession.get(Module.class, moduleId);
+
+        Map<Integer, Lesson> lessonMap = new HashMap<>();
+        for (Lesson lesson : module.getLessons()) {
+            lessonMap.put(lesson.getId(), lesson);
+        }
+        module.getLessons().removeAll(module.getLessons());
+        for (Lesson value : lessonMap.values()) {
+            module.getLessons().add(value);
+        }
 
         return module;
     }

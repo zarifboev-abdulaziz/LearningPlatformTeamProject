@@ -20,11 +20,36 @@
 <div style="padding: 20px">
 
     <a class="btn btn-info" href='/modules/info/${lesson.module.id}'>Back to Lessons</a>
+    <a class="btn btn-success" href='/tasks/addTask'> + Add Task</a>
     <hr>
     <h4>${lesson.title}</h4>
     <p>${lesson.orderNumber} - Lesson</p><br>
     <p>${lesson.body}</p>
 
+    <center>
+        <h5>Task List</h5>
+    </center>
+    <br>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Task</th>
+            <th>Actions</th>
+        </tr>
+
+        <c:forEach var="task" items="${tasks}">
+            <tr>
+                <td>
+                    <a class="btn btn-primary" href="/tasks/info/${task.id}">${task.title}</a>
+                </td>
+                <td>${task.body }</td>
+                <td>
+                    <a class="btn btn-warning" href='/tasks/editForm/${task.id}'>Edit</a>
+                    <a class="btn btn-danger" href="/tasks/delete/${task.id}">Delete</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 
 </div>
 </body>

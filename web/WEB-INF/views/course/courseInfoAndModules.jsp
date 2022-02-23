@@ -33,7 +33,9 @@
         </c:forEach>
     </p>
 
-    <h4>Module List</h4>
+    <center>
+        <h4>Module List</h4>
+    </center>
 
     <div class="container">
         <div class="row">
@@ -42,10 +44,10 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">${module.title}</h5>
+                            <h5 class="card-title"><a class="btn btn-secondary" href="/modules/info/${module.id}">${module.title}</a></h5>
                             <a class="btn btn-warning" href='/modules/editModule/${module.id}'>Edit</a>
                             <a class="btn btn-danger" href="/modules/delete/${module.id}">Delete</a>
-                            <a class="btn btn-info" href="/modules/info/${module.id}">More...</a>
+
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,14 @@
 package uz.pdp.model;
 
+import jdk.internal.dynalink.linker.LinkerServices;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,5 +33,8 @@ public class Lesson {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Module module;
+
+    @OneToMany(mappedBy = "lesson", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Task> tasks = new ArrayList<>();
 
 }

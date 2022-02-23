@@ -32,7 +32,7 @@ public class Module {
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "module", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Lesson> lessons = new ArrayList<>();
 
 }

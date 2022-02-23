@@ -27,6 +27,15 @@
         <p>${lesson.body}</p>
     </center>
 
+
+    <c:choose>
+        <c:when test="${lesson.tasks.size() != 0}">
+            <a class="btn btn-info" href='/student/tasks/${lesson.id}/${lesson.tasks.get(0).id}'>Solve Tasks</a>
+        </c:when>
+    </c:choose>
+
+
+
 </div>
 </body>
 </html>

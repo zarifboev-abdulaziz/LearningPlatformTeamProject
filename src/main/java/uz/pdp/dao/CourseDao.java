@@ -2,6 +2,7 @@ package uz.pdp.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,18 @@ public class CourseDao {
         if (course.getId() == null) {
             currentSession.save(course);
         } else {
-            currentSession.update(course);
+
+            String hql = "update courses set name=:name, description=:description, imageName =:imageName, isActive =: isActive, price =: price where id=:id";
+
+            Query query = currentSession.createQuery(hql);
+            query.setParameter("name",course.getName());
+            query.setParameter("description",course.getDescription());
+            query.setParameter("imageName",course.getImageName());
+            query.setParameter("isActive",course.isActive());
+            query.setParameter("price",course.getPrice());
+            query.setParameter("id",course.getId());
+
+            query.executeUpdate();
         }
     }
 

@@ -1,5 +1,6 @@
 package uz.pdp.controller.userController;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +28,36 @@ public class UserController {
         return "/user/home";
     }
 
-    @GetMapping("/settings")
+    @GetMapping("/profile")
     public String editUserPrifile(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer userId = (int) session.getAttribute("userId");
         model.addAttribute("user", userService.getUserById(String.valueOf(userId)));
         return "user/editUsersProfile";
     }
+
+    @GetMapping("/fillBalance1")
+    public String fillBalance(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer userId = (int) session.getAttribute("userId");
+        User userById = userService.getUserById(String.valueOf(userId));
+        model.addAttribute("profile", userById);
+        model.addAttribute("isFillingBalance", true);
+        return "/user/profileSettings";
+    }
+
+    @GetMapping("/fillBalance")
+    public String fillUserBalance(HttpServletRequest request){
+        User user = new User();
+        String fill = request.getParameter("fill");
+        HttpSession session = request.getSession();
+        Integer userId = (int) session.getAttribute("userId");
+        user.setBalance(Double.valueOf(fill));
+        user.setId(userId);
+        userService.fillBalance(user);
+        return "redirect:/user/settings";
+    }
+
 
 
     @PostMapping("/edit")
@@ -74,6 +98,17 @@ public class UserController {
         session.invalidate();
         return "redirect:/user/home";
     }
+
+
+    @GetMapping(path = "/settings")
+    public String profile(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer userId = (int) session.getAttribute("userId");
+        User userById = userService.getUserById(String.valueOf(userId));
+        model.addAttribute("profile", userById);
+        return "/user/profileSettings";
+    }
+
 
 
 }

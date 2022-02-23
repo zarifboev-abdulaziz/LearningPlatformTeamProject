@@ -62,4 +62,9 @@ public class UserService {
     public void deleteUserById(Integer mentorId) {
         userDao.deleteUserById(mentorId);
     }
+
+    @Transactional
+    public User fillBalance(User user){
+        return userDao.fillBalance(user);
+    }
 }

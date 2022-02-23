@@ -5,7 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import uz.pdp.helper.CompletedTasks;
+import uz.pdp.helper.Result;
 import uz.pdp.model.*;
 import uz.pdp.service.*;
 
@@ -154,30 +157,74 @@ public class StudentController {
 
     @GetMapping(path = "/tasks/{lessonId}/{taskId}")
     public String showLessonTasks(@PathVariable Integer lessonId, @PathVariable Integer taskId, Model model, HttpServletRequest request){
+        Integer userId = (int)request.getSession().getAttribute("userId");
         Lesson lessonById = lessonService.getLessonById(lessonId);
         Task taskById = taskService.getTaskById(taskId);
+        List<String> bgColor = checkBgColor(lessonById, userId);
 
         model.addAttribute("lesson", lessonById);
         model.addAttribute("task", taskById);
+        model.addAttribute("bgColor", bgColor);
         return "/student/tasks";
     }
 
-    @GetMapping(path = "/checkOption/{lessonId}/{taskId}/{optionId}")
-    public String showLessonTasks(@PathVariable Integer lessonId, @PathVariable Integer taskId, @PathVariable Integer optionId, Model model, HttpServletRequest request){
+
+    @PostMapping(path = "/checkOption/{lessonId}/{taskId}")
+    public String checkUserOption(@PathVariable Integer lessonId, @PathVariable Integer taskId, Model model, HttpServletRequest request){
+        String option = request.getParameter("option");
+        Integer userId = (int)request.getSession().getAttribute("userId");
         Lesson lessonById = lessonService.getLessonById(lessonId);
         Task taskById = taskService.getTaskById(taskId);
-        Option optionById = optionService.getOptionById(optionId);
 
-        boolean isRight = false;
-        if (optionById.isRightAnswer()){
-            isRight = true;
+        Result result = checkOption(option, userId);
+        List<String> bgColor = checkBgColor(lessonById, userId);
+
+        model.addAttribute("lesson", lessonById);
+        model.addAttribute("task", taskById);
+        model.addAttribute("result", result);
+        model.addAttribute("bgColor", bgColor);
+        return "/student/tasks";
+
+    }
+
+    private List<String> checkBgColor(Lesson lessonById, Integer userId) {
+        List<String> result = new ArrayList<>();
+        List<CompletedTasks> completedTasksList = taskService.getUserCompletedTasks(userId);
+
+        for (Task task : lessonById.getTasks()) {
+            if (completedTasksList.stream().anyMatch(completedTasks -> completedTasks.getTaskId() == task.getId())){
+                result.add("bg-success");
+            } else {
+                result.add("bg-danger");
+            }
         }
 
-        model.addAttribute("lesson", lessonById);
-        model.addAttribute("task", taskById);
-        model.addAttribute("isRight", isRight);
-        return "/student/tasks";
+        return result;
     }
 
+    private Result checkOption(String option, Integer userId) {
+        if (option == null){
+            return new Result(false, "Please Select one option", null);
+        }
+
+        int optionId = Integer.parseInt(option);
+        Option optionById = optionService.getOptionById(optionId);
+
+
+
+        if (optionById.isRightAnswer()){
+            List<CompletedTasks> userCompletedTasks = taskService.getUserCompletedTasks(userId);
+            for (CompletedTasks userCompletedTask : userCompletedTasks) {
+                if (userCompletedTask.getTaskId() == optionById.getTask().getId() && userCompletedTask.getUserId() == userId){
+                    return new Result(true, "You selected true option", optionById);
+                }
+            }
+
+            taskService.addTaskToCompletedTasks(optionById.getTask().getId(), userId);
+            return new Result(true, "You selected true option", optionById);
+        } else {
+            return new Result(false, "You selected wrong option, please try again", optionById);
+        }
+    }
 
 }

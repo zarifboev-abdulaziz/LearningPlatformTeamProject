@@ -17,6 +17,7 @@
 
 <div style="padding: 20px">
 
+    <a class="m-4 btn btn-info" href="/student/lessonInfo/${lesson.id}">Back To Lesson</a><br>
 
     <h4>${task.title}</h4>
     <hr>
@@ -25,18 +26,28 @@
 
 
     <div class="list-group col-6">
+        <div class="form-check">
+            <form action="/student/checkOption/${lesson.id}/${task.id}" method="post">
         <c:forEach var="option" items="${task.options}">
-            <a href="/student/checkOption/${lesson.id}/${task.id}/${option.id}"
-               class="list-group-item list-group-item-action m-1">${option.body}</a>
+
+            <input class="form-check-input" type="radio" name="option" id="exampleRadios1" value="${option.id}">
+            <label class="form-check-label" for="exampleRadios1">${option.body}</label><br>
+
         </c:forEach>
-    </div><br>
+                <br>
+                <button class="btn btn-success">Send</button>
+            </form>
+        </div>
+    </div>
+    <br><br>
+
 
     <c:choose>
-        <c:when test="${isRight == true}">
-            <p class="text-success">You selected right Answer</p>
+        <c:when test="${result.success == true}">
+            <p class="text-success">${result.message}</p>
         </c:when>
-        <c:when test="${isRight == false}">
-            <p class="text-danger">You selected Wrong Answer</p>
+        <c:when test="${result.success == false}">
+            <p class="text-danger">${result.message}</p>
         </c:when>
     </c:choose>
 
@@ -44,8 +55,10 @@
         <ul class="pagination justify-content-center">
 
             <c:forEach var="t" begin="1" end="${lesson.tasks.size()}">
-                <li class="page-item"><a class="page-link"
+
+                <li class="page-item"><a class="page-link ${bgColor.get(t-1)} text-light"
                                          href="/student/tasks/${lesson.id}/${lesson.tasks.get(t-1).id}">${t}</a></li>
+
             </c:forEach>
 
         </ul>

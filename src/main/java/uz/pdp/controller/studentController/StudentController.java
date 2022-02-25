@@ -105,9 +105,11 @@ public class StudentController {
                 }
             }
         }
+        List<Integer> progressBarForEachCourse = courseService.getProgressBarForEachCourse(userId, myCourses);
 
 
         model.addAttribute("myCourses", myCourses);
+        model.addAttribute("progressBar", progressBarForEachCourse);
         return "/student/myCourses";
     }
 
@@ -115,6 +117,7 @@ public class StudentController {
     @GetMapping(path = "/modules/{courseId}")
     public String showCourseModules(@PathVariable Integer courseId, HttpServletRequest request, Model model) throws IOException {
         HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("userId");
         session.setAttribute("lastCourseId", courseId);
         Course courseById = courseService.getCourseById(courseId);
         List<User> users = courseById.getUsers();
@@ -124,9 +127,12 @@ public class StudentController {
                 mentors.add(user);
             }
         }
+        List<Integer> progressBarForEachModule = courseService.getProgressBarForEachModule(userId, courseById.getModules());
+
 
         model.addAttribute("course", courseById);
         model.addAttribute("mentors", mentors);
+        model.addAttribute("progressBar", progressBarForEachModule);
         return "/student/modules";
     }
 
@@ -136,11 +142,15 @@ public class StudentController {
     public String showModuleLessons(@PathVariable Integer moduleId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("lastModuleId", moduleId);
+        int userId = (int) session.getAttribute("userId");
         Module moduleById = moduleService.getModuleById(moduleId);
         List<Lesson> lessons = moduleById.getLessons();
+        List<Integer> progressBarForEachLesson = courseService.getProgressBarForEachLesson(userId, lessons);
+
 
         model.addAttribute("lessons", lessons);
         model.addAttribute("module", moduleById);
+        model.addAttribute("progressBar", progressBarForEachLesson);
         return "/student/lessons";
     }
 

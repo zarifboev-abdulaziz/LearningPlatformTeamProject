@@ -6,6 +6,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import uz.pdp.dao.CourseDao;
 import uz.pdp.dao.UserDao;
 import uz.pdp.model.Course;
+import uz.pdp.model.Lesson;
+import uz.pdp.model.Module;
 import uz.pdp.model.User;
 
 import javax.imageio.ImageIO;
@@ -111,5 +113,17 @@ public class CourseService {
 
     public void purchaseCourse(int userId, Integer courseId) {
         courseDao.purchaseCourse(userId, courseId);
+    }
+
+    public List<Integer> getProgressBarForEachCourse(int userId, List<Course> myCourses) {
+        return courseDao.getProgressBarForEachCourse(userId, myCourses);
+    }
+
+    public List<Integer> getProgressBarForEachModule(int userId, List<Module> modules) {
+        return courseDao.getProgressBarForEachModule(userId, modules);
+    }
+
+    public List<Integer> getProgressBarForEachLesson(int userId, List<Lesson> lessons) {
+        return courseDao.getProgressBarForEachLesson(userId, lessons);
     }
 }

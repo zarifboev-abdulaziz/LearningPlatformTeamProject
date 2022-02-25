@@ -26,21 +26,44 @@
 
     <h4>Lesson List</h4>
 
-    <div class="container">
-        <div class="row">
-            <c:forEach var="lesson" items="${module.lessons}">
+    <c:choose>
+        <c:when test="${module.lessons.size() != 0}">
 
-                <div class="col-md-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">${lesson.orderNumber} - ${lesson.title}</h5>
-                            <a class="btn btn-info" href="/student/lessonInfo/${lesson.id}">Go</a>
+            <div class="container">
+                <div class="row">
+                    <c:forEach var="i" begin="0" end="${module.lessons.size() - 1}">
+
+                        <div class="col-md-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${module.lessons.get(i).orderNumber}
+                                        - ${module.lessons.get(i).title}</h5>
+                                    <p class="card-text">${progressBar.get(i)}% - completed</p>
+                                </div>
+
+                                <div class="container">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: ${progressBar.get(i)}%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100">${progressBar.get(i)}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="card-footer">
+                                    <small class="text-muted"><a class="btn btn-info"
+                                                                 href="/student/lessonInfo/${module.lessons.get(i).id}">Go</a></small>
+                                </div>
+
+
+                            </div>
                         </div>
-                    </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
-        </div>
-    </div>
+            </div>
+        </c:when>
+    </c:choose>
 
 </div>
 </body>

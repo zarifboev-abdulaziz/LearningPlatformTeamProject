@@ -34,26 +34,44 @@
 
     <h4>Module List</h4>
 
-    <div class="container">
-        <div class="row">
-            <c:forEach var="module" items="${course.modules}">
+    <c:choose>
+        <c:when test="${course.modules.size() != 0}">
 
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Module - ${module.orderNumber}</h5>
-                            <p class="card-text">${module.title}</p>
-                            <div class="card-footer">
-                                <small class="text-muted"><a class="btn btn-success"
-                                                             href="/student/lessons/${module.id}">Go</a></small>
+
+            <div class="container">
+                <div class="row">
+                    <c:forEach var="i" begin="0" end="${course.modules.size() - 1}">
+
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Module - ${course.modules.get(i).orderNumber}</h5>
+                                    <p class="card-text">${course.modules.get(i).title}</p>
+                                    <p class="card-text">${progressBar.get(i)}% - completed</p>
+                                </div>
+
+                                <div class="container">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: ${progressBar.get(i)}%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100">${progressBar.get(i)}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="card-footer">
+                                    <small class="text-muted"><a class="btn btn-success"
+                                                                 href="/student/lessons/${course.modules.get(i).id}">Go</a></small>
+                                </div>
                             </div>
-
                         </div>
-                    </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
-        </div>
-    </div>
+            </div>
+
+        </c:when>
+    </c:choose>
 
 </div>
 </body>

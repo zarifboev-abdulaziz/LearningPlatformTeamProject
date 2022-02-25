@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uz.pdp.model.Course;
+import uz.pdp.model.Lesson;
 import uz.pdp.model.Module;
 
 import javax.persistence.Query;
@@ -108,6 +109,7 @@ public class CourseDao {
     public Course getCourseById(Integer courseId) {
         Session currentSession = sessionFactory.getCurrentSession();
         Course course = currentSession.get(Course.class, courseId);
+
         Map<Integer, Module> moduleMap = new HashMap<>();
         for (Module module : course.getModules()) {
             moduleMap.put(module.getId(), module);
@@ -140,5 +142,44 @@ public class CourseDao {
 
         Boolean isPurchased = template.queryForObject(query, (rs, rowNum) -> rs.getBoolean(1));
 
+    }
+
+    public List<Integer> getProgressBarForEachCourse(int userId, List<Course> myCourses) {
+        List<Integer> progressBarForEachCourse = new ArrayList<>();
+
+        for (Course myCours : myCourses) {
+            String query = "select * from get_progress_bar_for_course("+userId+" , "+myCours.getId()+")";
+            Double percentage = template.queryForObject(query, (rs, rowNum) -> rs.getDouble(1));
+
+            progressBarForEachCourse.add(percentage.intValue());
+        }
+
+        return progressBarForEachCourse;
+    }
+
+    public List<Integer> getProgressBarForEachModule(int userId, List<Module> modules) {
+        List<Integer> progressBarForEachModule = new ArrayList<>();
+
+        for (Module module : modules) {
+            String query = "select * from get_progress_bar_for_module("+userId+" , "+module.getId()+")";
+            Double percentage = template.queryForObject(query, (rs, rowNum) -> rs.getDouble(1));
+
+            progressBarForEachModule.add(percentage.intValue());
+        }
+
+        return progressBarForEachModule;
+    }
+
+    public List<Integer> getProgressBarForEachLesson(int userId, List<Lesson> lessons) {
+        List<Integer> progressBarForEachLesson = new ArrayList<>();
+
+        for (Lesson lesson : lessons) {
+            String query = "select * from get_progress_bar_for_lesson("+userId+" , "+lesson.getId()+")";
+            Double percentage = template.queryForObject(query, (rs, rowNum) -> rs.getDouble(1));
+
+            progressBarForEachLesson.add(percentage.intValue());
+        }
+
+        return progressBarForEachLesson;
     }
 }

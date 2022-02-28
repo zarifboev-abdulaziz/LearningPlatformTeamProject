@@ -34,6 +34,24 @@
         </c:when>
     </c:choose>
 
+    <br>
+    <h5>Comments</h5>
+    <div style="padding: 20px" class="col-6">
+        <form action="/comment/lesson/${lesson.id}" method="post">
+            <input type="text" class="form-control" placeholder="write here..." name="comment">
+            <button class="m-4 btn btn-success">Add Comment</button>
+        </form>
+    </div>
+    <br>
+
+    <c:forEach var="comment" items="${comments}">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">${comment.user.fullName}</h5>
+                <p class="card-text">${comment.body}</p>
+            </div>
+        </div>
+    </c:forEach>
 
 
 </div>

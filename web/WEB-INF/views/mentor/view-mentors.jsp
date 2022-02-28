@@ -17,6 +17,7 @@
 <body>
 <div style="padding: 20px">
 
+    <a class="m-4 btn btn-warning" href="/admin/home">Home</a>
     <a class="m-4 btn btn-success" href="/mentor/add">+ Add new mentor</a>
 
 

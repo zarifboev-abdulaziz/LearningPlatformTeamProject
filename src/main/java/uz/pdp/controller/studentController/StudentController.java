@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import uz.pdp.helper.CompletedTasks;
+import uz.pdp.helper.LessonComment;
 import uz.pdp.helper.Result;
+import uz.pdp.helper.TaskComment;
 import uz.pdp.model.*;
 import uz.pdp.service.*;
 
@@ -31,11 +33,17 @@ public class StudentController {
     TaskService taskService;
     @Autowired
     OptionService optionService;
+    @Autowired
+    CommentService commentService;
 
 
 
     @GetMapping(path = "/home")
-    public String studentHome() {
+    public String studentHome(HttpServletRequest request, Model model) throws IOException {
+        int roleId = (int) request.getSession().getAttribute("roleId");
+        List<Course> allCourses = courseService.getAllCourses(1, roleId);
+
+        model.addAttribute("allCourses", allCourses);
         return "/student/home";
     }
 
@@ -147,7 +155,6 @@ public class StudentController {
         List<Lesson> lessons = moduleById.getLessons();
         List<Integer> progressBarForEachLesson = courseService.getProgressBarForEachLesson(userId, lessons);
 
-
         model.addAttribute("lessons", lessons);
         model.addAttribute("module", moduleById);
         model.addAttribute("progressBar", progressBarForEachLesson);
@@ -160,8 +167,10 @@ public class StudentController {
         HttpSession session = request.getSession();
         session.setAttribute("lastLessonId", lessonId);
         Lesson lessonById = lessonService.getLessonById(lessonId);
+        List<LessonComment> lessonComments = commentService.getLessonComments(lessonId);
 
         model.addAttribute("lesson", lessonById);
+        model.addAttribute("comments", lessonComments);
         return "/student/lessonInfo";
     }
 
@@ -171,10 +180,12 @@ public class StudentController {
         Lesson lessonById = lessonService.getLessonById(lessonId);
         Task taskById = taskService.getTaskById(taskId);
         List<String> bgColor = checkBgColor(lessonById, userId);
+        List<TaskComment> taskComments = commentService.getTaskComments(taskId);
 
         model.addAttribute("lesson", lessonById);
         model.addAttribute("task", taskById);
         model.addAttribute("bgColor", bgColor);
+        model.addAttribute("comments", taskComments);
         return "/student/tasks";
     }
 

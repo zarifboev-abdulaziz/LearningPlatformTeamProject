@@ -73,7 +73,11 @@ public class MentorController {
 
 
     @GetMapping("/home")
-    public String mentorHome() {
+    public String mentorHome(HttpServletRequest request, Model model) throws IOException {
+        int roleId = (int) request.getSession().getAttribute("roleId");
+        List<Course> allCourses = courseService.getAllCourses(1, roleId);
+
+        model.addAttribute("allCourses", allCourses);
         return "/mentor/home";
     }
 

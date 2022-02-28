@@ -101,6 +101,7 @@ public class CourseController {
     public String getCourseInfo(@PathVariable Integer courseId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("lastCourseId", courseId);
+        Integer roleId = (int)session.getAttribute("roleId");
         Course courseById = courseService.getCourseById(courseId);
         List<User> users = courseById.getUsers();
         List<User> mentors = new ArrayList<>();
@@ -112,6 +113,7 @@ public class CourseController {
 
         model.addAttribute("course", courseById);
         model.addAttribute("mentors", mentors);
+        model.addAttribute("roleId", roleId);
         return "/course/courseInfoAndModules";
     }
 

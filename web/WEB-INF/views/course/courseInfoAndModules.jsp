@@ -19,7 +19,16 @@
 <body>
 <div style="padding: 20px">
 
-    <a class="btn btn-info" href='/courses/1'>Back to Courses</a>
+    <c:choose>
+        <c:when test="${roleId == 2}">
+            <a class="btn btn-info" href='/mentor/courses'>Back to Courses</a>
+        </c:when>
+        <c:when test="${roleId == 3}">
+            <a class="btn btn-info" href='/courses/1'>Back to Courses</a>
+        </c:when>
+    </c:choose>
+
+
     <a class="btn btn-success" href='/modules/addModule'>+ Add new Module</a>
     <hr>
     <h4>${course.name}</h4>

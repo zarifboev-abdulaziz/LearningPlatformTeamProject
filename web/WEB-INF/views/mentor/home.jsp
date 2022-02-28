@@ -21,6 +21,37 @@
 <a class="m-4 btn btn-success" href="/mentor/courses">Show my courses</a>
 <a class="m-4 btn btn-success" href="/user/settings">Profile Settings</a>
 <a class="m-4 btn btn-success" href="/user/logout">Log out</a>
+<br><br>
 
+<div style="padding: 20px">
+    <h4>Your Courses</h4><br>
+
+    <div class="container">
+        <div class="row">
+
+            <c:forEach var="course" items="${allCourses}">
+
+                <div class="col-md-3">
+                    <div class="card border-success mb-3" style="width: 18rem;">
+                        <img src="data:image/png;base64, ${course.imagePath}" class="card-img-top"
+                             alt="Here Should be image">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.name}</h5>
+                            <p class="card-text">${course.active}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted"><a class="btn btn-info"
+                                                         href="/courses/info/${course.id}">More...</a></small>
+                        </div>
+                    </div>
+                </div>
+
+            </c:forEach>
+        </div>
+    </div>
+
+
+
+</div>
 </body>
 </html>

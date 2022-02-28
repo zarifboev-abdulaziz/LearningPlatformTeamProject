@@ -15,29 +15,34 @@
     <title>Courses</title>
 </head>
 <body>
-<div class="container">
-    <div class="row">
+<div style="padding: 20px">
+    <a class="m-4 btn btn-warning" href="/mentor/home">Home</a>
 
-        <c:forEach var="course" items="${mentorCourses}">
+    <div class="container">
+        <div class="row">
+
+            <c:forEach var="course" items="${mentorCourses}">
 
 
-            <div class="col-md-3" >
-                <div class="card border-success mb-3" style="width: 18rem;">
-                    <img src="data:image/png;base64, ${course.imagePath}" class="card-img-top"
-                         alt="Here Should be image">
-                    <div class="card-body">
-                        <h5 class="card-title">${course.name}</h5>
-                        <p class="card-text">${course.active}</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted"><a class="btn btn-info" href="/courses/info/${course.id}">More...</a></small>
+                <div class="col-md-3">
+                    <div class="card border-success mb-3" style="width: 18rem;">
+                        <img src="data:image/png;base64, ${course.imagePath}" class="card-img-top"
+                             alt="Here Should be image">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.name}</h5>
+                            <p class="card-text">${course.active}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted"><a class="btn btn-info"
+                                                         href="/courses/info/${course.id}">More...</a></small>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-        </c:forEach>
+            </c:forEach>
 
+        </div>
     </div>
 </div>
 

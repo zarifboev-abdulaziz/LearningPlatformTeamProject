@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.model.*;
 import uz.pdp.model.User;
-import uz.pdp.model.User;
+import uz.pdp.service.CourseService;
 import uz.pdp.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +22,15 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    CourseService courseService;
 
 
     @GetMapping(path = "/home")
-    public String getCourses() {
+    public String getCourses(Model model) throws IOException {
+        List<Course> allCourses = courseService.getAllCourses(1, 1);
 
+        model.addAttribute("allCourses", allCourses);
         return "/user/home";
     }
 
@@ -109,6 +115,31 @@ public class UserController {
         return "/user/profileSettings";
     }
 
+
+    @GetMapping(path = "/courseInfo/{courseId}")
+    public String showCoursesInfo(@PathVariable Integer courseId, HttpServletRequest request, Model model) throws IOException {
+        Course courseById = courseService.getCourseById(courseId);
+
+        int lessonCount = 0;
+
+        for (Module module : courseById.getModules()) {
+            lessonCount += module.getLessons().size();
+        }
+        List<User> mentors = new ArrayList<>();
+        for (User user : courseById.getUsers()) {
+            for (Role role : user.getRoles()) {
+                if (role.getId() == 2){
+                    mentors.add(user);
+                }
+            }
+        }
+
+
+        model.addAttribute("course", courseById);
+        model.addAttribute("lessonCount", lessonCount);
+        model.addAttribute("mentors", mentors);
+        return "/guest/courseInfo";
+    }
 
 
 }

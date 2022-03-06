@@ -17,9 +17,48 @@
     <title>Courses</title>
 </head>
 <body>
-<div style="padding: 20px">
+<div class="container">
+<%--    <a class="m-4 btn btn-success" href="/student/activeCourses/1">Back To Courses</a><br>--%>
 
-    <a class="m-4 btn btn-success" href="/student/activeCourses/1">Back To Courses</a><br>
+
+
+    <div class="">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <%--                <a href="#" class="navbar-brand">Brand</a>--%>
+                <a class="navbar-brand" href="/student/activeCourses/1">Buy Course</a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="/student/myCourses" class="nav-item nav-link">My courses</a>
+                        <a href="/user/settings" class="nav-item nav-link">Profile</a>
+                        <%--                        <div class="nav-item dropdown">--%>
+                        <%--                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Messages</a>--%>
+                        <%--                            <div class="dropdown-menu">--%>
+                        <%--                                <a href="#" class="dropdown-item">Inbox</a>--%>
+                        <%--                                <a href="#" class="dropdown-item">Sent</a>--%>
+                        <%--                                <a href="#" class="dropdown-item">Drafts</a>--%>
+                        <%--                            </div>--%>
+                        <%--                        </div>--%>
+                    </div>
+                    <div class="d-flex ">
+                        <form class="navbar-nav">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                                <button type="button" class="btn btn-secondary"><i class="bi-search"></i></button>
+                            </div>
+                        </form>
+                        <div class="navbar-nav">
+                            <a href="/user/logout" class="nav-item nav-link">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
 
 
     <h4>${course.name}</h4>

@@ -20,7 +20,9 @@ import java.util.List;
 public class  AdminController {
 
     @GetMapping(path = "/home")
-    public String studentHome() {
+    public String studentHome(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("roleId", 3);
         return "/admin/home";
     }
 

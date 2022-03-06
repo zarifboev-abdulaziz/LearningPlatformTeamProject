@@ -23,11 +23,6 @@
         <input type="hidden" class="form-control" value="${option.id}" name="id"><br>
         <input type="text" class="form-control" value="${option.body}" name="body"><br>
 
-        <div class="form-check">
-            <input name = "isRightAnswer" type="checkbox" class="form-check-input" id="check">
-            <label class = "form-check-label" for="check"> is correct option? </label>
-        </div><br>
-
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>

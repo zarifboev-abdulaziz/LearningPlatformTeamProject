@@ -29,27 +29,10 @@ public class OptionController {
     }
 
     @PostMapping("/addOption")
-    public String addOption(HttpServletRequest request){
+    public String addOption(HttpServletRequest request, @ModelAttribute Option option){
         HttpSession session = request.getSession();
         Integer lastTaskId = (Integer) session.getAttribute("lastTaskId");
         Task taskById = taskService.getTaskById(lastTaskId);
-        String body = request.getParameter("body");
-        String isRightAnswer = request.getParameter("isRightAnswer");
-        String id = request.getParameter("id");
-
-        boolean is_right = false;
-        if (isRightAnswer != null){
-            is_right = true;
-        }
-        Integer optionId = null;
-        if (id != null){
-            optionId = Integer.parseInt(id);
-        }
-
-        Option option = new Option();
-        option.setId(optionId);
-        option.setBody(body);
-        option.setRightAnswer(is_right);
         option.setTask(taskById);
 
         optionService.saveOption(option);

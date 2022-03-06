@@ -19,5 +19,6 @@ public class LessonComment {
     private User user;
     private Lesson lesson;
     private String body;
+    private Integer numberOfReplies;
 
 }

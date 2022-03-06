@@ -8,6 +8,7 @@ import uz.pdp.model.Option;
 import uz.pdp.model.Task;
 
 import javax.persistence.Query;
+import java.io.Serializable;
 
 @Component
 public class OptionDao {
@@ -15,13 +16,16 @@ public class OptionDao {
     public SessionFactory sessionFactory;
 
 
-    public void saveOption(Option option) {
+    public Option saveOption(Option option) {
         Session currentSession = sessionFactory.getCurrentSession();
         if (option.getId() == null){
-            currentSession.save(option);
+            Serializable save = currentSession.save(option);
+            return currentSession.get(Option.class, save);
         } else {
             currentSession.update(option);
+            return currentSession.get(Option.class, option.getId());
         }
+
     }
 
     public Option getOptionById(Integer optionId) {

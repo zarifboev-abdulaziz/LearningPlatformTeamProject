@@ -16,7 +16,7 @@
 </head>
 <body>
 <a class="m-4 btn btn-success" href="/courses/addCourseForm">+ Add new course</a>
-<a class="m-4 btn btn-success" href="/mentors">Authors</a>
+<a class="m-4 btn btn-success" href="/mentor/show">Mentors</a>
 <a class="m-4 btn btn-warning" href="/admin/home">Home</a>
 <div style="padding: 20px">
     <form action="/courses/search" method="post">

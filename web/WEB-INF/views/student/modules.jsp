@@ -24,6 +24,15 @@
     <h4>${course.name}</h4>
     <p>${course.description}</p>
 
+    <br>
+    <c:choose>
+    <c:when test="${isCourseCompleted == true}">
+        <a class="btn btn-success" href='/student/getCertificate/${course.id}'>Get Certificate</a>
+        <br>
+    </c:when>
+    </c:choose>
+    <br>
+
     <p>
         Mentors:
         <c:forEach var="mentor" items="${mentors}">

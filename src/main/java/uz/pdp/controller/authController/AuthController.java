@@ -62,10 +62,16 @@ public class AuthController {
 
         HttpSession session = request.getSession();
         session.setAttribute("userId", loginedUser.getId());
-        session.setAttribute("roleId", loginedUser.getRoleId());
+
+        if (loginedUser.getRoles().size()!=1){
+            model.addAttribute("roles", loginedUser.getRoles());
+            return "/user/chooseRole";
+        }
+
+        session.setAttribute("roleId", loginedUser.getRoles().get(0).getId());
         model.addAttribute("message", "Welcome To Home Page");
 
-        switch (loginedUser.getRoleId()){
+        switch (loginedUser.getRoles().get(0).getId()){
             case 1: return "redirect:/student/home";
             case 2: return "redirect:/mentor/home";
             case 3: return "redirect:/admin/home";

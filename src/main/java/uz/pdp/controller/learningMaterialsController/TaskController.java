@@ -8,11 +8,15 @@ import uz.pdp.model.Lesson;
 import uz.pdp.model.Module;
 import uz.pdp.model.Option;
 import uz.pdp.model.Task;
+import uz.pdp.payload.TaskDto;
 import uz.pdp.service.LessonService;
+import uz.pdp.service.OptionService;
 import uz.pdp.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -22,19 +26,69 @@ public class TaskController {
     LessonService lessonService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    OptionService optionService;
 
     @GetMapping("/addTask")
     public String addTaskForm(){
         return "/task/addTaskForm";
     }
 
+    @PostMapping("/editTask")
+    public String editTask(@ModelAttribute TaskDto taskDto, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer lastLessonId = (Integer) session.getAttribute("lastLessonId");
+
+        Task taskById = taskService.getTaskById(taskDto.getTaskId());
+        taskById.setBody(taskDto.getBody());
+        taskById.setTitle(taskDto.getTitle());
+
+        for (Option option : taskById.getOptions()) {
+            option.setRightAnswer(false);
+
+            if (option.getId() == taskDto.getTrueOption()) {
+                option.setRightAnswer(true);
+            }
+
+            optionService.saveOption(option);
+        }
+
+        taskService.saveTask(taskById);
+        return "redirect:/lessons/info/" + lastLessonId;
+    }
+
     @PostMapping("/addTask")
-    public String addTask(@ModelAttribute Task task, HttpServletRequest request){
+    public String addTask(@ModelAttribute TaskDto taskDto, HttpServletRequest request){
+
         HttpSession session = request.getSession();
         Integer lastLessonId = (Integer) session.getAttribute("lastLessonId");
         Lesson lessonById = lessonService.getLessonById(lastLessonId);
+
+        Task task = new Task();
+        task.setTitle(taskDto.getTitle());
+        task.setBody(taskDto.getBody());
+
         task.setLesson(lessonById);
-        taskService.saveTask(task);
+        Task savedTask = taskService.saveTask(task);
+
+        List<String> options = new ArrayList<>(Arrays.asList(taskDto.getOption1(), taskDto.getOption2(), taskDto.getOption3(), taskDto.getOption4()));
+
+        for (int i = 0; i < options.size(); i++) {
+            Option savingOption = new Option();
+            savingOption.setTask(savedTask);
+            savingOption.setBody(options.get(i));
+
+            if ((i+1) == taskDto.getTrueOption()){
+                savingOption.setRightAnswer(true);
+            } else {
+                savingOption.setRightAnswer(false);
+            }
+
+            Option savedOption = optionService.saveOption(savingOption);
+            savedTask.getOptions().add(savedOption);
+        }
+
+        taskService.saveTask(savedTask);
         return "redirect:/lessons/info/" + lastLessonId;
     }
 

@@ -118,6 +118,24 @@ public class CourseDao {
         for (Module value : moduleMap.values()) {
             course.getModules().add(value);
         }
+
+        List<Module> modules = course.getModules();
+        for (Module module : modules) {
+
+            Map<Integer, Lesson> lessonMap = new HashMap<>();
+
+            for (Lesson lesson : module.getLessons()) {
+                lessonMap.put(lesson.getId(), lesson);
+            }
+
+            module.getLessons().removeAll(module.getLessons());
+
+            for (Lesson value : lessonMap.values()) {
+                module.getLessons().add(value);
+            }
+
+        }
+
         return course;
     }
 
@@ -181,5 +199,32 @@ public class CourseDao {
         }
 
         return progressBarForEachLesson;
+    }
+
+    public List<Course> getUserPurchasedCourses(int userId) {
+        List<Integer> courseIds = new ArrayList<>();
+
+        String query = "select course_id from user_purchased_courses where user_id = " + userId;
+
+        courseIds = template.query(query, (rs, rowNum) -> rs.getInt(1));
+
+        List<Course> userCourses = new ArrayList<>();
+
+        for (Integer courseId : courseIds) {
+            Course courseById = getCourseById(courseId);
+            userCourses.add(courseById);
+        }
+
+        return userCourses;
+    }
+
+    public boolean isCourseCompleted(Integer courseId, int userId) {
+        String query = "select * from get_progress_bar_for_course("+userId+" , "+courseId+")";
+        Double percentage = template.queryForObject(query, (rs, rowNum) -> rs.getDouble(1));
+        int completion = percentage.intValue();
+        if (completion == 100){
+            return true;
+        }
+        return false;
     }
 }

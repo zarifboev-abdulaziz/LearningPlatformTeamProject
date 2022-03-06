@@ -16,8 +16,8 @@ public class TaskService {
 
 
     @Transactional
-    public void saveTask(Task task) {
-        taskDao.saveTask(task);
+    public Task saveTask(Task task) {
+        return taskDao.saveTask(task);
     }
 
     @Transactional

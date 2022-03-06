@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Add Task</title>
@@ -18,11 +20,18 @@
 <div style="padding: 20px" class="col-8 mx-auto">
     <h5>Add Task Form</h5><hr>
 
-    <form action="/tasks/addTask" method="post">
+    <form action="/tasks/editTask" method="post">
 
-        <input type="hidden" value="${task.id}" name="id">
+        <input type="hidden" value="${task.id}" name="taskId">
         <input type="text" class="form-control" value="${task.title}" name="title"><br>
         <input type="text" class="form-control" value="${task.body}" name="body"><br>
+
+        <p>Please Select one true option</p><br>
+
+        <c:forEach var="option" items="${task.options}">
+            <input class="form-check-input" type="radio" name="trueOption" id="variant" value="${option.id}">
+            <label class="form-check-label" for="variant">${option.body}</label><br>
+        </c:forEach>
 
         <button type="submit" class="btn btn-primary">Save</button>
     </form>

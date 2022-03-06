@@ -24,11 +24,23 @@ public class CommentService {
         return commentDao.getLessonComments(lessonId);
     }
 
+    @Transactional
     public void addTaskComment(int userId, Integer taskId, String comment) {
         commentDao.addTaskComment(userId, taskId, comment);
     }
 
+    @Transactional
     public List<TaskComment> getTaskComments(Integer taskId) {
         return commentDao.getTaskComments(taskId);
+    }
+
+    @Transactional
+    public void addLessonReplyComment(int userId, int lastLessonId, String replyComment, Integer commentId) {
+        commentDao.addReplyCommentForLesson(userId, lastLessonId, replyComment, commentId);
+    }
+
+    @Transactional
+    public List<LessonComment> getRepliedComments(Integer commentId, Integer lessonId) {
+        return commentDao.getRepliedComments(commentId, lessonId);
     }
 }

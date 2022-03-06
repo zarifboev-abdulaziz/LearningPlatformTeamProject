@@ -13,8 +13,8 @@ public class OptionService {
     OptionDao optionDao;
 
     @Transactional
-    public void saveOption(Option option) {
-     optionDao.saveOption(option);
+    public Option saveOption(Option option) {
+     return optionDao.saveOption(option);
     }
 
     @Transactional

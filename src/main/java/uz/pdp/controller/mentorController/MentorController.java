@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.model.Course;
+import uz.pdp.model.Role;
 import uz.pdp.model.User;
 import uz.pdp.service.CourseService;
 import uz.pdp.service.UserService;
@@ -13,16 +14,13 @@ import uz.pdp.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/mentor")
 public class MentorController {
     @Autowired
     CourseService courseService;
-
-
     @Autowired
     UserService userService;
 
@@ -53,7 +51,9 @@ public class MentorController {
         user.setPassword(password);
         user.setEmail(email);
         user.setFullName(fullname);
-        user.setRoleId(2);
+        Role studentRole = new Role(1, "student");
+        Role mentorRole = new Role(2, "mentor");
+        user.setRoles(Arrays.asList(studentRole, mentorRole));
         userService.saveUser(user);
         return "redirect:/mentor/show";
     }
@@ -71,13 +71,35 @@ public class MentorController {
         return "redirect:/mentor/show";
     }
 
+    @GetMapping("/mentorInfo/{mentorId}")
+    public String getInfoAboutMentor(Model model, @PathVariable Integer mentorId){
+        User mentor = userService.getUserById(String.valueOf(mentorId));
+        Map<Integer, Course> courseMap = new HashMap<>();
+        for (Course cours : mentor.getCourses()) {
+            courseMap.put(cours.getId(), cours);
+        }
+
+        model.addAttribute("mentor", mentor);
+        model.addAttribute("mentorCourses", courseMap);
+        return "/mentor/info";
+    }
 
     @GetMapping("/home")
-    public String mentorHome(HttpServletRequest request, Model model) throws IOException {
-        int roleId = (int) request.getSession().getAttribute("roleId");
-        List<Course> allCourses = courseService.getAllCourses(1, roleId);
+    public String mentorHome(Model model, HttpServletRequest request) throws IOException {
+        List<Course> mentorCourses = new ArrayList<>();
+        List<Course> allCourses = courseService.getAllCourses();
+        HttpSession session = request.getSession();
+        Integer userId = (int) session.getAttribute("userId");
 
-        model.addAttribute("allCourses", allCourses);
+        for (Course course : allCourses) {
+            for (User user : course.getUsers()) {
+                if (user.getId() == userId) {
+                    mentorCourses.add(course);
+                }
+            }
+        }
+
+        model.addAttribute("allCourses", mentorCourses);
         return "/mentor/home";
     }
 
@@ -91,7 +113,11 @@ public class MentorController {
         for (Course course : allCourses) {
             for (User user : course.getUsers()) {
                 if (user.getId() == userId) {
-                    mentorCourses.add(course);
+                    for (Role role : user.getRoles()) {
+                        if (role.getId() == 2){
+                            mentorCourses.add(course);
+                        }
+                    }
                 }
             }
         }

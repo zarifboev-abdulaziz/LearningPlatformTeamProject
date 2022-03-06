@@ -111,19 +111,33 @@ public class CourseService {
         return allCoursesFromDb;
     }
 
+    @Transactional
     public void purchaseCourse(int userId, Integer courseId) {
         courseDao.purchaseCourse(userId, courseId);
     }
 
+    @Transactional
     public List<Integer> getProgressBarForEachCourse(int userId, List<Course> myCourses) {
         return courseDao.getProgressBarForEachCourse(userId, myCourses);
     }
 
+    @Transactional
     public List<Integer> getProgressBarForEachModule(int userId, List<Module> modules) {
         return courseDao.getProgressBarForEachModule(userId, modules);
     }
 
+    @Transactional
     public List<Integer> getProgressBarForEachLesson(int userId, List<Lesson> lessons) {
         return courseDao.getProgressBarForEachLesson(userId, lessons);
+    }
+
+    @Transactional
+    public List<Course> getUserPurchasedCourses(int userId) {
+        return courseDao.getUserPurchasedCourses(userId);
+    }
+
+    @Transactional
+    public boolean isCourseCompleted(Integer courseId, int userId) {
+        return courseDao.isCourseCompleted(courseId, userId);
     }
 }

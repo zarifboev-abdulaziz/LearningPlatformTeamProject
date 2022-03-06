@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uz.pdp.model.Role;
 import uz.pdp.model.User;
 
 import javax.persistence.Query;
@@ -22,6 +23,8 @@ public class UserDao {
 
     public User registerUserToDb(User registeringUser) {
         Session currentSession = sessionFactory.getCurrentSession();
+        Role role = new Role(1, "student");
+        registeringUser.getRoles().add(role);
         Serializable save = currentSession.save(registeringUser);
 
         User user = currentSession.get(User.class, save);
@@ -59,8 +62,13 @@ public class UserDao {
         List<User> userList = (List<User>) query.getResultList();
 
         for (User user : userList) {
-            if (user.getRoleId() == 2) {
-                mentorList.add(user);
+            for (Role role : user.getRoles()) {
+                if (role.getName().equals("mentor") && !role.getName().equals("admin")){
+                    mentorList.add(user);
+                }
+                if (role.getName().equals("admin")){
+                    mentorList.remove(user);
+                }
             }
         }
         return mentorList;

@@ -1,6 +1,8 @@
 package uz.pdp.model;
 
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -25,10 +27,6 @@ public class User {
     private String password;
     @Column(name = "balance", columnDefinition = " double precision default 0")
     private double balance = 0;
-
-    @Column(name = "role_id", columnDefinition = "int default 1")
-    private Integer roleId = 1;
-
     @Column(name = "created_at", columnDefinition = " timestamp default now()")
     private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
     @Column(name = "updated_at", columnDefinition = " timestamp default now()")
@@ -37,5 +35,8 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Course> courses = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<Role> roles = new ArrayList<>();
 
 }

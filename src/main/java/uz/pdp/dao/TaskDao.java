@@ -12,6 +12,7 @@ import uz.pdp.model.Option;
 import uz.pdp.model.Task;
 
 import javax.persistence.Query;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,14 @@ public class TaskDao {
     @Autowired
     JdbcTemplate template;
 
-    public void saveTask(Task task) {
+    public Task saveTask(Task task) {
         Session currentSession = sessionFactory.getCurrentSession();
         if (task.getId() == null){
-            currentSession.save(task);
+            Serializable save = currentSession.save(task);
+            return currentSession.get(Task.class, save);
         } else {
             currentSession.update(task);
+            return currentSession.get(Task.class, task.getId());
         }
     }
 

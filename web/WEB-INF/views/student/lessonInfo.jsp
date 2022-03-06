@@ -47,8 +47,48 @@
     <c:forEach var="comment" items="${comments}">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">${comment.user.fullName}</h5>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-1">${comment.user.fullName} <span class="small"></span></p>
+                    <a href="/student/lessonInfo/reply/${comment.id}"><i class="fas fa-reply fa-xs"></i><span
+                            class="small"> reply</span></a>
+                </div>
                 <p class="card-text">${comment.body}</p>
+                <c:choose>
+                    <c:when test="${comment.numberOfReplies != 0}">
+                        <a href="/comment/showReplies/${comment.id}">show ${comment.numberOfReplies} replies</a>
+                    </c:when>
+                </c:choose>
+
+                <c:choose>
+                    <c:when test="${replyingCommentId == comment.id}">
+                        <br>
+                        <form action="/comment/reply/${comment.id}" method="post">
+                            <input type="text" class="form-control" placeholder="reply comment here..."
+                                   name="replyComment">
+                            <a class="m-4 btn btn-danger" href="/student/lessonInfo/${lesson.id}">cancel</a>
+                            <button class="m-4 btn btn-success">reply</button>
+                        </form>
+                        <br>
+                    </c:when>
+                </c:choose>
+
+                <c:choose>
+                    <c:when test="${isShowingReplies == true}">
+                        <c:choose>
+                            <c:when test="${repliedCommentId == comment.id}">
+                                <div class="container">
+                                    <a href="/student/lessonInfo/${lesson.id}">hide comments</a>
+                                    <c:forEach var="repliedComment" items="${repliedComments}">
+                                        <h5>${repliedComment.user.fullName}</h5>
+                                        <p>${repliedComment.body}</p>
+                                    </c:forEach>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </c:when>
+                </c:choose>
+
             </div>
         </div>
     </c:forEach>

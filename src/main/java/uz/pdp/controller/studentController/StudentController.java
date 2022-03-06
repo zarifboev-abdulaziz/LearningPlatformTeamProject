@@ -1,5 +1,6 @@
 package uz.pdp.controller.studentController;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,14 @@ import uz.pdp.helper.TaskComment;
 import uz.pdp.model.*;
 import uz.pdp.service.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/student")
@@ -35,13 +39,16 @@ public class StudentController {
     OptionService optionService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    UserService userService;
 
 
 
     @GetMapping(path = "/home")
     public String studentHome(HttpServletRequest request, Model model) throws IOException {
-        int roleId = (int) request.getSession().getAttribute("roleId");
-        List<Course> allCourses = courseService.getAllCourses(1, roleId);
+        HttpSession session = request.getSession();
+        session.setAttribute("roleId", 1);
+        List<Course> allCourses = courseService.getAllCourses(1, 1);
 
         model.addAttribute("allCourses", allCourses);
         return "/student/home";
@@ -65,19 +72,26 @@ public class StudentController {
         Course courseById = courseService.getCourseById(courseId);
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
+
         int lessonCount = 0;
+
         for (Module module : courseById.getModules()) {
             lessonCount += module.getLessons().size();
         }
         List<User> mentors = new ArrayList<>();
         for (User user : courseById.getUsers()) {
-            if (user.getRoleId() == 2) {
-                mentors.add(user);
+            for (Role role : user.getRoles()) {
+                if (role.getId() == 2){
+                    mentors.add(user);
+                }
             }
         }
+
         boolean isCoursePurchased = false;
-        for (User user : courseById.getUsers()) {
-            if (user.getId() == userId) {
+
+        List<Course> userPurchasedCourses = courseService.getUserPurchasedCourses(userId);
+        for (Course userPurchasedCours : userPurchasedCourses) {
+            if (userPurchasedCours.getId() == courseId){
                 isCoursePurchased = true;
             }
         }
@@ -88,6 +102,7 @@ public class StudentController {
         model.addAttribute("isCoursePurchased", isCoursePurchased);
         return "/student/courseInfo";
     }
+
 
     @GetMapping(path = "/purchaseCourse/{courseId}")
     public String purchaseCourse(@PathVariable Integer courseId, HttpServletRequest request, Model model) throws IOException {
@@ -104,17 +119,10 @@ public class StudentController {
     public String studentCourses(HttpServletRequest request, Model model) throws IOException {
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
-        List<Course> allCourses = courseService.getAllCourses();
-        List<Course> myCourses = new ArrayList<>();
-        for (Course course : allCourses) {
-            for (User user : course.getUsers()) {
-                if (user.getId() == userId) {
-                    myCourses.add(course);
-                }
-            }
-        }
-        List<Integer> progressBarForEachCourse = courseService.getProgressBarForEachCourse(userId, myCourses);
 
+        List<Course> myCourses = courseService.getUserPurchasedCourses(userId);
+
+        List<Integer> progressBarForEachCourse = courseService.getProgressBarForEachCourse(userId, myCourses);
 
         model.addAttribute("myCourses", myCourses);
         model.addAttribute("progressBar", progressBarForEachCourse);
@@ -128,24 +136,38 @@ public class StudentController {
         int userId = (int) session.getAttribute("userId");
         session.setAttribute("lastCourseId", courseId);
         Course courseById = courseService.getCourseById(courseId);
-        List<User> users = courseById.getUsers();
+        boolean isCourseCompleted = courseService.isCourseCompleted(courseId, userId);
+
         List<User> mentors = new ArrayList<>();
-        for (User user : users) {
-            if (user.getRoleId() == 2) {
-                mentors.add(user);
+        for (User user : courseById.getUsers()) {
+            for (Role role : user.getRoles()) {
+                if (role.getId() == 2){
+                    mentors.add(user);
+                }
             }
         }
         List<Integer> progressBarForEachModule = courseService.getProgressBarForEachModule(userId, courseById.getModules());
 
 
         model.addAttribute("course", courseById);
+        model.addAttribute("isCourseCompleted", isCourseCompleted);
         model.addAttribute("mentors", mentors);
         model.addAttribute("progressBar", progressBarForEachModule);
         return "/student/modules";
     }
 
-//    lessons
+    @GetMapping("/getCertificate/{courseId}")
+    public String getCertificate(@PathVariable Integer courseId,  Model model, HttpServletRequest request){
+        int userId = (int) request.getSession().getAttribute("userId");
+        Course courseById = courseService.getCourseById(courseId);
+        User userById = userService.getUserById(String.valueOf(userId));
 
+        model.addAttribute("user", userById);
+        model.addAttribute("course", courseById);
+        return "/student/certificate";
+    }
+
+//    lessons
     @GetMapping(path = "/lessons/{moduleId}")
     public String showModuleLessons(@PathVariable Integer moduleId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -173,6 +195,22 @@ public class StudentController {
         model.addAttribute("comments", lessonComments);
         return "/student/lessonInfo";
     }
+
+    // value = /student/lessonInfo/reply/{commentId}
+    @GetMapping(path = "/lessonInfo/reply/{commentId}")
+    public String replyToComment(@PathVariable Integer commentId, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("lastCommentId", commentId);
+        int lessonId = (int) session.getAttribute("lastLessonId");
+        Lesson lessonById = lessonService.getLessonById(lessonId);
+        List<LessonComment> lessonComments = commentService.getLessonComments(lessonId);
+
+        model.addAttribute("lesson", lessonById);
+        model.addAttribute("comments", lessonComments);
+        model.addAttribute("replyingCommentId", commentId);
+        return "/student/lessonInfo";
+    }
+
 
     @GetMapping(path = "/tasks/{lessonId}/{taskId}")
     public String showLessonTasks(@PathVariable Integer lessonId, @PathVariable Integer taskId, Model model, HttpServletRequest request){

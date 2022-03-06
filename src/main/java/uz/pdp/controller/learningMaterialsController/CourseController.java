@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import uz.pdp.model.Course;
 import uz.pdp.model.Module;
+import uz.pdp.model.Role;
 import uz.pdp.model.User;
 import uz.pdp.service.CourseService;
 import uz.pdp.service.UserService;
@@ -106,8 +107,10 @@ public class CourseController {
         List<User> users = courseById.getUsers();
         List<User> mentors = new ArrayList<>();
         for (User user : users) {
-            if (user.getRoleId() == 2){
-                mentors.add(user);
+            for (Role role : user.getRoles()) {
+                if(role.getId() == 2){
+                    mentors.add(user);
+                }
             }
         }
 

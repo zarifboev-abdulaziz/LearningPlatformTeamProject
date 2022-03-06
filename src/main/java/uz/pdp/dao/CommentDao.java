@@ -27,15 +27,24 @@ public class CommentDao {
         template.execute(sql);
     }
 
-    public List<LessonComment> getLessonComments(Integer lessonId) {
-        String query = "select * from lesson_comments where lesson_id = " + lessonId;
+    public void addReplyCommentForLesson(int userId, Integer lessonId, String replyComment, Integer commentId) {
+        String sql = "INSERT INTO lesson_comments (user_id, lesson_id, body, parent_id) VALUES ("+userId+", "+lessonId+", '"+replyComment+"', '"+commentId+"')";
+        template.execute(sql);
+    }
 
-        List<LessonComment> lessonComments = template.query(query, (rs, rowNum) -> {
+    public List<LessonComment> getLessonComments(Integer lessonId) {
+        String queryForLessonComments = "select * from lesson_comments where parent_id is null AND lesson_id = " + lessonId;
+        String queryForNumberOfReplies = "select count(*) from lesson_comments where parent_id = ";
+
+        List<LessonComment> lessonComments = template.query(queryForLessonComments, (rs, rowNum) -> {
            LessonComment lessonComment = new LessonComment();
            lessonComment.setId(rs.getInt("id"));
             User user_id = userService.getUserById(String.valueOf(rs.getInt("user_id")));
             lessonComment.setUser(user_id);
             lessonComment.setBody(rs.getString("body"));
+
+            Integer numberOfReplies = template.queryForObject(queryForNumberOfReplies + lessonComment.getId(), (rs1, rowNum1) -> rs1.getInt(1));
+            lessonComment.setNumberOfReplies(numberOfReplies);
 
             return lessonComment;
         });
@@ -43,6 +52,24 @@ public class CommentDao {
 
         return lessonComments;
     }
+
+    public List<LessonComment> getRepliedComments(Integer commentId, Integer lessonId) {
+        String queryForRepliedComments = "select * from lesson_comments where parent_id = " + commentId + " AND lesson_id = " + lessonId;
+
+        List<LessonComment> repliedComments = template.query(queryForRepliedComments, (rs, rowNum) -> {
+            LessonComment lessonComment = new LessonComment();
+            lessonComment.setId(rs.getInt("id"));
+            User user_id = userService.getUserById(String.valueOf(rs.getInt("user_id")));
+            lessonComment.setUser(user_id);
+            lessonComment.setBody(rs.getString("body"));
+
+            return lessonComment;
+        });
+
+        return repliedComments;
+    }
+
+
 
     public void addTaskComment(int userId, Integer taskId, String comment) {
         String sql = "INSERT INTO task_comments (user_id, task_id, body) VALUES ("+userId+", "+taskId+", '"+comment+"')";
@@ -64,4 +91,6 @@ public class CommentDao {
 
         return taskComments;
     }
+
+
 }

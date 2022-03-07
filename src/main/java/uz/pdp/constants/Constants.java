@@ -2,7 +2,7 @@ package uz.pdp.constants;
 
 public interface Constants {
 
-    String resourcePath = "C:\\Users\\User\\Desktop\\TeamProject\\LearningPlatformTeamProject\\src\\main\\resources";
+    String resourcePath = "/Users/muhammadsodiq/Desktop/team_project/LearningPlatformTeamProject/src/main/resources";
     Integer courseNumberPerPage = 12;
 
 }

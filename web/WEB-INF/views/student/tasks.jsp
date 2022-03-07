@@ -9,15 +9,56 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/homePage.css">
     <title>Tasks</title>
 </head>
 <body>
 
-<div style="padding: 20px">
 
-    <a class="m-4 btn btn-info" href="/student/lessonInfo/${lesson.id}">Back To Lesson</a><br>
+<div class="container">
+    <div class="">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <%--                <a href="#" class="navbar-brand">Brand</a>--%>
+                <a class="navbar-brand" href="/student/lessonInfo/${lesson.id}">Lessons</a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="/user/settings" class="nav-item nav-link">Profile</a>
+                    </div>
+                    <div class="d-flex ">
+                        <form class="navbar-nav">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                                <button type="button" class="btn btn-secondary"><i
+                                        class="bi-search"></i></button>
+                            </div>
+                        </form>
+                        <div class="navbar-nav">
+                            <a href="/user/logout" class="nav-item nav-link">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+
+
+
+<div class="container">
+
+<%--    <a class="m-4 btn btn-info" href="/student/lessonInfo/${lesson.id}">Back To Lesson</a><br>--%>
 
     <h4>${task.title}</h4>
     <hr>
@@ -68,8 +109,17 @@
     <h5>Comments</h5>
     <div style="padding: 20px" class="col-6">
         <form action="/comment/task/${task.id}" method="post">
-            <input type="text" class="form-control" placeholder="write here..." name="comment">
-            <button class="m-4 btn btn-success">Add Comment</button>
+<%--            <input type="text" class="form-control" placeholder="write here..." name="comment">--%>
+<%--            <button class="m-4 btn btn-success">Add Comment</button>--%>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="write here..." name="comment">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="button">Send</button>
+                </div>
+            </div>
+
+
         </form>
     </div>
     <br>

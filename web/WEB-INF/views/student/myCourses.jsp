@@ -10,27 +10,71 @@
 
 <html>
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/homePage.css">
+     <title>Courses</title>
 </head>
+<style>
+    #intro {
+        background-image: url("https://mdbootstrap.com/img/new/fluid/city/018.jpg");
+        height: 100vh;
+    }
+    .box{
+        margin: 20px;
+    }
+</style>
 <body>
-<a class="m-4 btn btn-warning" href="/student/home">Home</a>
+
+
+
+<div class="container">
+    <div class="">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <%--                <a href="#" class="navbar-brand">Brand</a>--%>
+                <a class="navbar-brand" href="/student/home">Home</a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="/user/settings" class="nav-item nav-link">Profile</a>
+                    </div>
+                    <div class="d-flex ">
+                        <form class="navbar-nav">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                                <button type="button" class="btn btn-secondary"><i class="bi-search"></i></button>
+                            </div>
+                        </form>
+                        <div class="navbar-nav">
+                            <a href="/user/logout" class="nav-item nav-link">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
 
 <c:choose>
     <c:when test="${myCourses.size() != 0}">
 
-        <div class="container">
-            <div class="row">
+        <div class="container" id="intro">
+            <div class="row d-flex justify-content-around">
 
 
                 <c:forEach var="i" begin="0" end="${myCourses.size() - 1}">
 
-                    <div class="col-md-3">
-                        <div class="card border-success mb-3" style="width: 18rem;">
+                    <div class="col-3 box">
+                        <div class="card border-success mb-3" style="width: 18rem; border-radius:
+                         20px; height: 550px">
                             <img src="data:image/png;base64, ${myCourses.get(i).imagePath}" class="card-img-top"
-                                 alt="Here Should be image">
-                            <div class="card-body">
+                                 alt="Here Should be image" style="border-radius: 20px; height:
+                                 230px; padding: 10px;">
+                            <div class="card-body" style="height: 200px">
                                 <h5 class="card-title">${myCourses.get(i).name}</h5>
                                 <p class="card-text">${myCourses.get(i).description}</p>
                                 <p class="card-text">${progressBar.get(i)}% - completed</p>
